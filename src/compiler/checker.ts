@@ -8207,7 +8207,7 @@ namespace ts {
                 if (container.parent && container.parent.kind === SyntaxKind.ObjectLiteralExpression) {
                     // Note: this works because object literal methods are deferred,
                     // which means that the type of the containing object literal is already known.
-                    const type = checkExpressionCached(<ObjectLiteralExpression>container.parent);
+                    const type = getIntersectionType(filter([getContextualType(container.parent as ObjectLiteralExpression), checkExpressionCached(<ObjectLiteralExpression>container.parent)], x => !!x));
                     if (type) {
                         return type;
                     }
@@ -8467,6 +8467,12 @@ namespace ts {
             if ((isFunctionExpressionOrArrowFunction(func) || isObjectLiteralMethod(func)) &&
                 isContextSensitive(func) &&
                 func.kind !== SyntaxKind.ArrowFunction) {
+                const type = isObjectLiteralMethod(func)
+                    ? getContextualTypeForObjectLiteralMethod(func)
+                    : getApparentTypeOfContextualType(func);
+                if (type === anyType) {
+                    return anyType;
+                }
                 const contextualSignature = getContextualSignature(func);
                 if (contextualSignature) {
                     return contextualSignature.thisType;
