@@ -4130,7 +4130,7 @@ interface Date {
 /////////////////////////////
 
 interface Algorithm {
-    name?: string;
+    name: string;
 }
 
 interface AriaRequestEventInit extends EventInit {
@@ -5045,7 +5045,7 @@ interface ApplicationCache extends EventTarget {
     oncached: (ev: Event) => any;
     onchecking: (ev: Event) => any;
     ondownloading: (ev: Event) => any;
-    onerror: (ev: Event) => any;
+    onerror: (ev: ErrorEvent) => any;
     onnoupdate: (ev: Event) => any;
     onobsolete: (ev: Event) => any;
     onprogress: (ev: ProgressEvent) => any;
@@ -6536,7 +6536,7 @@ interface Document extends Node, GlobalEventHandlers, NodeSelector, DocumentEven
       * Fires when the user aborts the download.
       * @param ev The event.
       */
-    onabort: (ev: Event) => any;
+    onabort: (ev: UIEvent) => any;
     /**
       * Fires when the object is set as the active element.
       * @param ev The event.
@@ -6638,7 +6638,7 @@ interface Document extends Node, GlobalEventHandlers, NodeSelector, DocumentEven
       * Fires when an error occurs during object loading.
       * @param ev The event.
       */
-    onerror: (ev: Event) => any;
+    onerror: (ev: ErrorEvent) => any;
     /**
       * Fires when the object receives focus. 
       * @param ev The event.
@@ -7589,7 +7589,7 @@ interface Element extends Node, GlobalEventHandlers, ElementTraversal, NodeSelec
     readonly scrollWidth: number;
     readonly tagName: string;
     innerHTML: string;
-    getAttribute(name?: string): string | null;
+    getAttribute(name: string): string | null;
     getAttributeNS(namespaceURI: string, localName: string): string;
     getAttributeNode(name: string): Attr;
     getAttributeNodeNS(namespaceURI: string, localName: string): Attr;
@@ -7799,6 +7799,7 @@ interface Element extends Node, GlobalEventHandlers, ElementTraversal, NodeSelec
     webkitRequestFullscreen(): void;
     getElementsByClassName(classNames: string): NodeListOf<Element>;
     matches(selector: string): boolean;
+    closest(selector: string): Element | null;
     addEventListener(type: "MSGestureChange", listener: (ev: MSGestureEvent) => any, useCapture?: boolean): void;
     addEventListener(type: "MSGestureDoubleTap", listener: (ev: MSGestureEvent) => any, useCapture?: boolean): void;
     addEventListener(type: "MSGestureEnd", listener: (ev: MSGestureEvent) => any, useCapture?: boolean): void;
@@ -8329,7 +8330,7 @@ interface HTMLBodyElement extends HTMLElement {
     onbeforeprint: (ev: Event) => any;
     onbeforeunload: (ev: BeforeUnloadEvent) => any;
     onblur: (ev: FocusEvent) => any;
-    onerror: (ev: Event) => any;
+    onerror: (ev: ErrorEvent) => any;
     onfocus: (ev: FocusEvent) => any;
     onhashchange: (ev: HashChangeEvent) => any;
     onload: (ev: Event) => any;
@@ -8570,7 +8571,7 @@ interface HTMLCanvasElement extends HTMLElement {
       * @param type The standard MIME type for the image format to return. If you do not specify this parameter, the default value is a PNG format image.
       */
     toDataURL(type?: string, ...args: any[]): string;
-    toBlob(): Blob;
+    toBlob(callback: (result: Blob | null) => void, ... arguments: any[]): void;
 }
 
 declare var HTMLCanvasElement: {
@@ -8668,7 +8669,7 @@ interface HTMLElement extends Element {
     readonly offsetParent: Element;
     readonly offsetTop: number;
     readonly offsetWidth: number;
-    onabort: (ev: Event) => any;
+    onabort: (ev: UIEvent) => any;
     onactivate: (ev: UIEvent) => any;
     onbeforeactivate: (ev: UIEvent) => any;
     onbeforecopy: (ev: ClipboardEvent) => any;
@@ -8696,7 +8697,7 @@ interface HTMLElement extends Element {
     ondurationchange: (ev: Event) => any;
     onemptied: (ev: Event) => any;
     onended: (ev: MediaStreamErrorEvent) => any;
-    onerror: (ev: Event) => any;
+    onerror: (ev: ErrorEvent) => any;
     onfocus: (ev: FocusEvent) => any;
     oninput: (ev: Event) => any;
     oninvalid: (ev: Event) => any;
@@ -9246,7 +9247,7 @@ interface HTMLFrameSetElement extends HTMLElement {
       * Fires when the object loses the input focus.
       */
     onblur: (ev: FocusEvent) => any;
-    onerror: (ev: Event) => any;
+    onerror: (ev: ErrorEvent) => any;
     /**
       * Fires when the object receives focus.
       */
@@ -10740,7 +10741,7 @@ declare var HTMLOptionElement: {
     create(): HTMLOptionElement;
 }
 
-interface HTMLOptionsCollection extends HTMLCollection {
+interface HTMLOptionsCollection extends HTMLCollectionOf<HTMLOptionElement> {
     length: number;
     selectedIndex: number;
     add(element: HTMLOptionElement | HTMLOptGroupElement, before?: HTMLElement | number): void;
@@ -10904,7 +10905,7 @@ interface HTMLSelectElement extends HTMLElement {
       * Sets or retrieves the name of the object.
       */
     name: string;
-    options: HTMLCollectionOf<HTMLOptionElement>;
+    readonly options: HTMLOptionsCollection;
     /**
       * When present, marks an element that can't be submitted without a value.
       */
@@ -11700,7 +11701,7 @@ interface IDBDatabase extends EventTarget {
     readonly name: string;
     readonly objectStoreNames: DOMStringList;
     onabort: (ev: Event) => any;
-    onerror: (ev: Event) => any;
+    onerror: (ev: ErrorEvent) => any;
     version: number;
     onversionchange: (ev: IDBVersionChangeEvent) => any;
     close(): void;
@@ -11803,7 +11804,7 @@ declare var IDBOpenDBRequest: {
 
 interface IDBRequest extends EventTarget {
     readonly error: DOMError;
-    onerror: (ev: Event) => any;
+    onerror: (ev: ErrorEvent) => any;
     onsuccess: (ev: Event) => any;
     readonly readyState: string;
     readonly result: any;
@@ -11825,7 +11826,7 @@ interface IDBTransaction extends EventTarget {
     readonly mode: string;
     onabort: (ev: Event) => any;
     oncomplete: (ev: Event) => any;
-    onerror: (ev: Event) => any;
+    onerror: (ev: ErrorEvent) => any;
     abort(): void;
     objectStore(name: string): IDBObjectStore;
     readonly READ_ONLY: string;
@@ -11968,7 +11969,7 @@ declare var MSApp: MSApp;
 interface MSAppAsyncOperation extends EventTarget {
     readonly error: DOMError;
     oncomplete: (ev: Event) => any;
-    onerror: (ev: Event) => any;
+    onerror: (ev: ErrorEvent) => any;
     readonly readyState: number;
     readonly result: any;
     start(): void;
@@ -12328,7 +12329,7 @@ declare var MSStreamReader: {
 interface MSWebViewAsyncOperation extends EventTarget {
     readonly error: DOMError;
     oncomplete: (ev: Event) => any;
-    onerror: (ev: Event) => any;
+    onerror: (ev: ErrorEvent) => any;
     readonly readyState: number;
     readonly result: any;
     readonly target: MSHTMLWebViewElement;
@@ -12864,7 +12865,7 @@ interface Node extends EventTarget {
     contains(child: Node): boolean;
     hasAttributes(): boolean;
     hasChildNodes(): boolean;
-    insertBefore(newChild: Node, refChild: Node): Node;
+    insertBefore(newChild: Node, refChild: Node | null): Node;
     isDefaultNamespace(namespaceURI: string | null): boolean;
     isEqualNode(arg: Node): boolean;
     isSameNode(other: Node): boolean;
@@ -13409,7 +13410,7 @@ declare var RTCDTMFToneChangeEvent: {
 
 interface RTCDtlsTransport extends RTCStatsProvider {
     ondtlsstatechange: ((ev: RTCDtlsTransportStateChangedEvent) => any) | null;
-    onerror: ((ev: Event) => any) | null;
+    onerror: ((ev: ErrorEvent) => any) | null;
     readonly state: string;
     readonly transport: RTCIceTransport;
     getLocalParameters(): RTCDtlsParameters;
@@ -13464,7 +13465,7 @@ declare var RTCIceCandidatePairChangedEvent: {
 
 interface RTCIceGatherer extends RTCStatsProvider {
     readonly component: string;
-    onerror: ((ev: Event) => any) | null;
+    onerror: ((ev: ErrorEvent) => any) | null;
     onlocalcandidate: ((ev: RTCIceGathererEvent) => any) | null;
     createAssociatedGatherer(): RTCIceGatherer;
     getLocalCandidates(): RTCIceCandidate[];
@@ -13523,7 +13524,7 @@ declare var RTCIceTransportStateChangedEvent: {
 }
 
 interface RTCRtpReceiver extends RTCStatsProvider {
-    onerror: ((ev: Event) => any) | null;
+    onerror: ((ev: ErrorEvent) => any) | null;
     readonly rtcpTransport: RTCDtlsTransport;
     readonly track: MediaStreamTrack | null;
     readonly transport: RTCDtlsTransport | RTCSrtpSdesTransport;
@@ -13543,7 +13544,7 @@ declare var RTCRtpReceiver: {
 }
 
 interface RTCRtpSender extends RTCStatsProvider {
-    onerror: ((ev: Event) => any) | null;
+    onerror: ((ev: ErrorEvent) => any) | null;
     onssrcconflict: ((ev: RTCSsrcConflictEvent) => any) | null;
     readonly rtcpTransport: RTCDtlsTransport;
     readonly track: MediaStreamTrack;
@@ -13564,7 +13565,7 @@ declare var RTCRtpSender: {
 }
 
 interface RTCSrtpSdesTransport extends EventTarget {
-    onerror: ((ev: Event) => any) | null;
+    onerror: ((ev: ErrorEvent) => any) | null;
     readonly transport: RTCIceTransport;
     addEventListener(type: "error", listener: (ev: ErrorEvent) => any, useCapture?: boolean): void;
     addEventListener(type: string, listener: EventListenerOrEventListenerObject, useCapture?: boolean): void;
@@ -15604,18 +15605,24 @@ declare var StyleSheetPageList: {
 }
 
 interface SubtleCrypto {
-    decrypt(algorithm: string | Algorithm, key: CryptoKey, data: ArrayBufferView): PromiseLike<any>;
-    deriveBits(algorithm: string | Algorithm, baseKey: CryptoKey, length: number): PromiseLike<any>;
-    deriveKey(algorithm: string | Algorithm, baseKey: CryptoKey, derivedKeyType: string | Algorithm, extractable: boolean, keyUsages: string[]): PromiseLike<any>;
-    digest(algorithm: string | Algorithm, data: ArrayBufferView): PromiseLike<any>;
-    encrypt(algorithm: string | Algorithm, key: CryptoKey, data: ArrayBufferView): PromiseLike<any>;
-    exportKey(format: string, key: CryptoKey): PromiseLike<any>;
-    generateKey(algorithm: string | Algorithm, extractable: boolean, keyUsages: string[]): PromiseLike<any>;
-    importKey(format: string, keyData: ArrayBufferView, algorithm: string | Algorithm | null, extractable: boolean, keyUsages: string[]): PromiseLike<any>;
-    sign(algorithm: string | Algorithm, key: CryptoKey, data: ArrayBufferView): PromiseLike<any>;
-    unwrapKey(format: string, wrappedKey: ArrayBufferView, unwrappingKey: CryptoKey, unwrapAlgorithm: string | Algorithm, unwrappedKeyAlgorithm: string | Algorithm | null, extractable: boolean, keyUsages: string[]): PromiseLike<any>;
-    verify(algorithm: string | Algorithm, key: CryptoKey, signature: ArrayBufferView, data: ArrayBufferView): PromiseLike<any>;
-    wrapKey(format: string, key: CryptoKey, wrappingKey: CryptoKey, wrapAlgorithm: string | Algorithm): PromiseLike<any>;
+    decrypt(algorithm: string | RsaOaepParams | AesCtrParams | AesCbcParams | AesCmacParams | AesGcmParams | AesCfbParams, key: CryptoKey, data: BufferSource): PromiseLike<ArrayBuffer>;
+    deriveBits(algorithm: string | EcdhKeyDeriveParams | DhKeyDeriveParams | ConcatParams | HkdfCtrParams | Pbkdf2Params, baseKey: CryptoKey, length: number): PromiseLike<ArrayBuffer>;
+    deriveKey(algorithm: string | EcdhKeyDeriveParams | DhKeyDeriveParams | ConcatParams | HkdfCtrParams | Pbkdf2Params, baseKey: CryptoKey, derivedKeyType: string | AesDerivedKeyParams | HmacImportParams | ConcatParams | HkdfCtrParams | Pbkdf2Params, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKey>;
+    digest(algorithm: AlgorithmIdentifier, data: BufferSource): PromiseLike<ArrayBuffer>;
+    encrypt(algorithm: string | RsaOaepParams | AesCtrParams | AesCbcParams | AesCmacParams | AesGcmParams | AesCfbParams, key: CryptoKey, data: BufferSource): PromiseLike<ArrayBuffer>;
+    exportKey(format: "jwk", key: CryptoKey): PromiseLike<JsonWebKey>;
+    exportKey(format: "raw" | "pkcs8" | "spki", key: CryptoKey): PromiseLike<ArrayBuffer>;
+    exportKey(format: string, key: CryptoKey): PromiseLike<JsonWebKey | ArrayBuffer>;
+    generateKey(algorithm: string, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKeyPair | CryptoKey>;
+    generateKey(algorithm: RsaHashedKeyGenParams | EcKeyGenParams | DhKeyGenParams, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKeyPair>;
+    generateKey(algorithm: AesKeyGenParams | HmacKeyGenParams | Pbkdf2Params, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKey>;
+    importKey(format: "jwk", keyData: JsonWebKey, algorithm: string | RsaHashedImportParams | EcKeyImportParams | HmacImportParams | DhImportKeyParams, extractable:boolean, keyUsages: string[]): PromiseLike<CryptoKey>;
+    importKey(format: "raw" | "pkcs8" | "spki", keyData: BufferSource, algorithm: string | RsaHashedImportParams | EcKeyImportParams | HmacImportParams | DhImportKeyParams, extractable:boolean, keyUsages: string[]): PromiseLike<CryptoKey>;
+    importKey(format: string, keyData: JsonWebKey | BufferSource, algorithm: string | RsaHashedImportParams | EcKeyImportParams | HmacImportParams | DhImportKeyParams, extractable:boolean, keyUsages: string[]): PromiseLike<CryptoKey>;
+    sign(algorithm: string | RsaPssParams | EcdsaParams | AesCmacParams, key: CryptoKey, data: BufferSource): PromiseLike<ArrayBuffer>;
+    unwrapKey(format: string, wrappedKey: BufferSource, unwrappingKey: CryptoKey, unwrapAlgorithm: AlgorithmIdentifier, unwrappedKeyAlgorithm: AlgorithmIdentifier, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKey>;
+    verify(algorithm: string | RsaPssParams | EcdsaParams | AesCmacParams, key: CryptoKey, signature: BufferSource, data: BufferSource): PromiseLike<boolean>;
+    wrapKey(format: string, key: CryptoKey, wrappingKey: CryptoKey, wrapAlgorithm: AlgorithmIdentifier): PromiseLike<ArrayBuffer>;
 }
 
 declare var SubtleCrypto: {
@@ -15683,7 +15690,7 @@ interface TextTrack extends EventTarget {
     readonly language: string;
     mode: any;
     oncuechange: (ev: Event) => any;
-    onerror: (ev: Event) => any;
+    onerror: (ev: ErrorEvent) => any;
     onload: (ev: Event) => any;
     readonly readyState: number;
     addCue(cue: TextTrackCue): void;
@@ -16906,7 +16913,7 @@ interface WebSocket extends EventTarget {
     readonly bufferedAmount: number;
     readonly extensions: string;
     onclose: (ev: CloseEvent) => any;
-    onerror: (ev: Event) => any;
+    onerror: (ev: ErrorEvent) => any;
     onmessage: (ev: MessageEvent) => any;
     onopen: (ev: Event) => any;
     readonly protocol: string;
@@ -16981,7 +16988,7 @@ interface Window extends EventTarget, WindowTimers, WindowSessionStorage, Window
     name: string;
     readonly navigator: Navigator;
     offscreenBuffering: string | boolean;
-    onabort: (ev: Event) => any;
+    onabort: (ev: UIEvent) => any;
     onafterprint: (ev: Event) => any;
     onbeforeprint: (ev: Event) => any;
     onbeforeunload: (ev: BeforeUnloadEvent) => any;
@@ -17403,7 +17410,7 @@ declare var XSLTProcessor: {
 }
 
 interface AbstractWorker {
-    onerror: (ev: Event) => any;
+    onerror: (ev: ErrorEvent) => any;
     addEventListener(type: "error", listener: (ev: ErrorEvent) => any, useCapture?: boolean): void;
     addEventListener(type: string, listener: EventListenerOrEventListenerObject, useCapture?: boolean): void;
 }
@@ -17562,7 +17569,7 @@ interface LinkStyle {
 
 interface MSBaseReader {
     onabort: (ev: Event) => any;
-    onerror: (ev: Event) => any;
+    onerror: (ev: ErrorEvent) => any;
     onload: (ev: Event) => any;
     onloadend: (ev: ProgressEvent) => any;
     onloadstart: (ev: Event) => any;
@@ -17715,18 +17722,21 @@ interface WindowSessionStorage {
 interface WindowTimers extends Object, WindowTimersExtension {
     clearInterval(handle: number): void;
     clearTimeout(handle: number): void;
+    setInterval(handler: (...args: any[]) => void, timeout: number): number;
     setInterval(handler: any, timeout?: any, ...args: any[]): number;
+    setTimeout(handler: (...args: any[]) => void, timeout: number): number;
     setTimeout(handler: any, timeout?: any, ...args: any[]): number;
 }
 
 interface WindowTimersExtension {
     clearImmediate(handle: number): void;
-    setImmediate(expression: any, ...args: any[]): number;
+    setImmediate(handler: (...args: any[]) => void): number;
+    setImmediate(handler: any, ...args: any[]): number;
 }
 
 interface XMLHttpRequestEventTarget {
     onabort: (ev: Event) => any;
-    onerror: (ev: Event) => any;
+    onerror: (ev: ErrorEvent) => any;
     onload: (ev: Event) => any;
     onloadend: (ev: ProgressEvent) => any;
     onloadstart: (ev: Event) => any;
@@ -17797,6 +17807,177 @@ interface ClipboardEventInit extends EventInit {
 }
 
 interface IDBArrayKey extends Array<IDBValidKey> {
+}
+
+interface RsaKeyGenParams extends Algorithm {
+    modulusLength: number;
+    publicExponent: Uint8Array;
+}
+
+interface RsaHashedKeyGenParams extends RsaKeyGenParams {
+    hash: AlgorithmIdentifier;
+}
+
+interface RsaKeyAlgorithm extends KeyAlgorithm {
+    modulusLength: number;
+    publicExponent: Uint8Array;
+}
+
+interface RsaHashedKeyAlgorithm extends RsaKeyAlgorithm {
+    hash: AlgorithmIdentifier;
+}
+
+interface RsaHashedImportParams {
+    hash: AlgorithmIdentifier;
+}
+
+interface RsaPssParams {
+    saltLength: number;
+}
+
+interface RsaOaepParams extends Algorithm {
+    label?: BufferSource;
+}
+
+interface EcdsaParams extends Algorithm {
+    hash: AlgorithmIdentifier;
+}
+
+interface EcKeyGenParams extends Algorithm {
+    typedCurve: string;
+}
+
+interface EcKeyAlgorithm extends KeyAlgorithm {
+    typedCurve: string;
+}
+
+interface EcKeyImportParams {
+    namedCurve: string;
+}
+
+interface EcdhKeyDeriveParams extends Algorithm {
+    public: CryptoKey;
+}
+
+interface AesCtrParams extends Algorithm {
+    counter: BufferSource;
+    length: number;
+}
+
+interface AesKeyAlgorithm extends KeyAlgorithm {
+    length: number;
+}
+
+interface AesKeyGenParams extends Algorithm {
+    length: number;
+}
+
+interface AesDerivedKeyParams extends Algorithm {
+    length: number;
+}
+
+interface AesCbcParams extends Algorithm {
+    iv: BufferSource;
+}
+
+interface AesCmacParams extends Algorithm {
+    length: number;
+}
+
+interface AesGcmParams extends Algorithm {
+    iv: BufferSource;
+    additionalData?: BufferSource;
+    tagLength?: number;
+}
+
+interface AesCfbParams extends Algorithm {
+    iv: BufferSource;
+}
+
+interface HmacImportParams extends Algorithm {
+    hash?: AlgorithmIdentifier;
+    length?: number;
+}
+
+interface HmacKeyAlgorithm extends KeyAlgorithm {
+    hash: AlgorithmIdentifier;
+    length: number;
+}
+
+interface HmacKeyGenParams extends Algorithm {
+    hash: AlgorithmIdentifier;
+    length?: number;
+}
+
+interface DhKeyGenParams extends Algorithm {
+    prime: Uint8Array;
+    generator: Uint8Array;
+}
+
+interface DhKeyAlgorithm extends KeyAlgorithm {
+    prime: Uint8Array;
+    generator: Uint8Array;
+}
+
+interface DhKeyDeriveParams extends Algorithm {
+    public: CryptoKey;
+}
+
+interface DhImportKeyParams extends Algorithm {
+    prime: Uint8Array;
+    generator: Uint8Array;
+}
+
+interface ConcatParams extends Algorithm {
+    hash?: AlgorithmIdentifier;
+    algorithmId: Uint8Array;
+    partyUInfo: Uint8Array;
+    partyVInfo: Uint8Array;
+    publicInfo?: Uint8Array;
+    privateInfo?: Uint8Array;
+}
+
+interface HkdfCtrParams extends Algorithm {
+    hash: AlgorithmIdentifier;
+    label: BufferSource;
+    context: BufferSource;
+}
+
+interface Pbkdf2Params extends Algorithm {
+    salt: BufferSource;
+    iterations: number;
+    hash: AlgorithmIdentifier;
+}
+
+interface RsaOtherPrimesInfo {
+    r: string;
+    d: string;
+    t: string;
+}
+
+interface JsonWebKey {
+    kty: string;
+    use?: string;
+    key_ops?: string[];
+    alg?: string;
+    kid?: string;
+    x5u?: string;
+    x5c?: string;
+    x5t?: string;
+    ext?: boolean;
+    crv?: string;
+    x?: string;
+    y?: string;
+    d?: string;
+    n?: string;
+    e?: string;
+    p?: string;
+    q?: string;
+    dp?: string;
+    dq?: string;
+    qi?: string;
+    oth?: RsaOtherPrimesInfo[];
+    k?: string;
 }
 
 declare type EventListenerOrEventListenerObject = EventListener | EventListenerObject;
@@ -17872,7 +18053,7 @@ declare var msCredentials: MSCredentials;
 declare var name: string;
 declare var navigator: Navigator;
 declare var offscreenBuffering: string | boolean;
-declare var onabort: (ev: Event) => any;
+declare var onabort: (ev: UIEvent) => any;
 declare var onafterprint: (ev: Event) => any;
 declare var onbeforeprint: (ev: Event) => any;
 declare var onbeforeunload: (ev: BeforeUnloadEvent) => any;
@@ -18022,10 +18203,13 @@ declare function dispatchEvent(evt: Event): boolean;
 declare function removeEventListener(type: string, listener?: EventListenerOrEventListenerObject, useCapture?: boolean): void;
 declare function clearInterval(handle: number): void;
 declare function clearTimeout(handle: number): void;
+declare function setInterval(handler: (...args: any[]) => void, timeout: number): number;
 declare function setInterval(handler: any, timeout?: any, ...args: any[]): number;
+declare function setTimeout(handler: (...args: any[]) => void, timeout: number): number;
 declare function setTimeout(handler: any, timeout?: any, ...args: any[]): number;
 declare function clearImmediate(handle: number): void;
-declare function setImmediate(expression: any, ...args: any[]): number;
+declare function setImmediate(handler: (...args: any[]) => void): number;
+declare function setImmediate(handler: any, ...args: any[]): number;
 declare var sessionStorage: Storage;
 declare var localStorage: Storage;
 declare var console: Console;
@@ -18169,6 +18353,7 @@ type RTCIceGatherCandidate = RTCIceCandidate | RTCIceCandidateComplete;
 type RTCTransport = RTCDtlsTransport | RTCSrtpSdesTransport;
 type payloadtype = number;
 type IDBValidKey = number | string | Date | IDBArrayKey;
+type BufferSource = ArrayBuffer | ArrayBufferView;
 /////////////////////////////
 /// WorkerGlobalScope APIs 
 /////////////////////////////
